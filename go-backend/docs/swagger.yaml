@@ -1,0 +1,191 @@
+definitions:
+  models.Document:
+    properties:
+      content:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  models.EditingSession:
+    properties:
+      current_position:
+        type: integer
+      document_id:
+        type: integer
+      is_editing_active:
+        type: boolean
+      user_id:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      id:
+        type: integer
+      user_name:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is the backend written in Go for the Collaborative Text Editor
+  title: Collaborative Text Editor's Go backend
+  version: 0.0.1
+paths:
+  /documents:
+    get:
+      description: Retrieve all Documents stored.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Document'
+            type: array
+      summary: Retrieve all Documents.
+      tags:
+      - Documents
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Create a new Document with an optional initial textual content and return
+        such Document encoded in JSON.
+      parameters:
+      - description: Document
+        in: body
+        name: document
+        required: true
+        schema:
+          $ref: '#/definitions/models.Document'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Document'
+        "400":
+          description: Bad Request
+      summary: Create a new Document.
+      tags:
+      - Documents
+  /documents/{id}:
+    get:
+      description: |-
+        Retrieve an User by its `ìd`, if there is no User with given `ìd`, then
+        return with status code 404 indicating it, if `id` is not an
+        integer, then return with status code 400 incidating that the given value
+        has an invalid type and the required type.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Retrieve a Document by its `id`.
+      tags:
+      - Documents
+  /editing-sessions:
+    get:
+      description: Retrieve all Editing Sessions stored.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.EditingSession'
+            type: array
+      summary: Retrieve all Editing Sessions.
+      tags:
+      - EditingSessions
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Create a new EditingSession and return
+        such EditingSession encoded in JSON.
+      parameters:
+      - description: EditingSession
+        in: body
+        name: editing_session
+        required: true
+        schema:
+          $ref: '#/definitions/models.EditingSession'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.EditingSession'
+        "400":
+          description: Bad Request
+      summary: Create a new EditingSession.
+      tags:
+      - EditingSessions
+  /editing-sessions/{user_id}/{document_id}:
+    post:
+      consumes:
+      - text/plain
+      description: Write bytes in a EditingSession in its current position.
+      parameters:
+      - description: User Id
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      - description: Document Id
+        in: path
+        name: document_id
+        required: true
+        type: integer
+      responses:
+        "400":
+          description: Bad Request
+      summary: Write in new EditingSession.
+      tags:
+      - EditingSessions
+  /users/{id}:
+    get:
+      description: |-
+        Retrieve an User by its `ìd`, if there is no User with given `ìd`, then
+        return with status code 404 indicating it, if `id` is not an
+        integer, then return with status code 400 incidating that the given value
+        has an invalid type and the required type.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Retrieve an User by its `id`.
+      tags:
+      - Users
+swagger: "2.0"

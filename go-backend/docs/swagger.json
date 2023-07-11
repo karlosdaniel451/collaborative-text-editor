@@ -1,0 +1,274 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is the backend written in Go for the Collaborative Text Editor",
+        "title": "Collaborative Text Editor's Go backend",
+        "contact": {},
+        "version": "0.0.1"
+    },
+    "paths": {
+        "/documents": {
+            "get": {
+                "description": "Retrieve all Documents stored.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Documents"
+                ],
+                "summary": "Retrieve all Documents.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Document"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new Document with an optional initial textual content and return\nsuch Document encoded in JSON.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Documents"
+                ],
+                "summary": "Create a new Document.",
+                "parameters": [
+                    {
+                        "description": "Document",
+                        "name": "document",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Document"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Document"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/documents/{id}": {
+            "get": {
+                "description": "Retrieve an User by its `ìd`, if there is no User with given `ìd`, then\nreturn with status code 404 indicating it, if `id` is not an\ninteger, then return with status code 400 incidating that the given value\nhas an invalid type and the required type.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Documents"
+                ],
+                "summary": "Retrieve a Document by its `id`.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/editing-sessions": {
+            "get": {
+                "description": "Retrieve all Editing Sessions stored.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "EditingSessions"
+                ],
+                "summary": "Retrieve all Editing Sessions.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.EditingSession"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new EditingSession and return\nsuch EditingSession encoded in JSON.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "EditingSessions"
+                ],
+                "summary": "Create a new EditingSession.",
+                "parameters": [
+                    {
+                        "description": "EditingSession",
+                        "name": "editing_session",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.EditingSession"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.EditingSession"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/editing-sessions/{user_id}/{document_id}": {
+            "post": {
+                "description": "Write bytes in a EditingSession in its current position.",
+                "consumes": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "EditingSessions"
+                ],
+                "summary": "Write in new EditingSession.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User Id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Document Id",
+                        "name": "document_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "description": "Retrieve an User by its `ìd`, if there is no User with given `ìd`, then\nreturn with status code 404 indicating it, if `id` is not an\ninteger, then return with status code 400 incidating that the given value\nhas an invalid type and the required type.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Retrieve an User by its `id`.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Document": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.EditingSession": {
+            "type": "object",
+            "properties": {
+                "current_position": {
+                    "type": "integer"
+                },
+                "document_id": {
+                    "type": "integer"
+                },
+                "is_editing_active": {
+                    "type": "boolean"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "user_name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
