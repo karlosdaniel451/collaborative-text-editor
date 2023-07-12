@@ -1,8 +1,7 @@
 <div class="container-fluid">
   <div class="text-center pt-5">
-  <textarea class="bg-white w-75" rows="35">
-
-  </textarea>
+    <h1>Documento {{ document.name }}</h1>
+    <textarea class="bg-white w-75" rows="35" [(ngModel)]="document.content"></textarea>
   </div>
 
 </div>
