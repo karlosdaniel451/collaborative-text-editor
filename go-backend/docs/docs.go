@@ -168,10 +168,62 @@ const docTemplate = `{
             }
         },
         "/editing-sessions/{user_id}/{document_id}": {
+            "put": {
+                "description": "Update the activity status or current position of an EditingSession.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "EditingSessions"
+                ],
+                "summary": "Update an EditingSession.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User Id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Document Id",
+                        "name": "document_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "EditingSession",
+                        "name": "editing_session",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.EditingSession"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.EditingSession"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            },
             "post": {
                 "description": "Write bytes in a EditingSession in its current position.",
                 "consumes": [
                     "text/plain"
+                ],
+                "produces": [
+                    "application/json"
                 ],
                 "tags": [
                     "EditingSessions"
@@ -194,6 +246,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.EditingSession"
+                        }
+                    },
                     "400": {
                         "description": "Bad Request"
                     }

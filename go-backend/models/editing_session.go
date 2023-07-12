@@ -48,12 +48,12 @@ func (editingSession *EditingSession) WriteToDocument(s string) error {
 func GetEditingSessionByUserIdAndDocumentId(
 	userId,
 	documentId int,
-) (EditingSession, error) {
+) (*EditingSession, error) {
 
 	for _, editingSession := range MockedEditingSessionsTable {
 		if editingSession.UserId == userId && editingSession.DocumentId == documentId {
-			return *editingSession, nil
+			return editingSession, nil
 		}
 	}
-	return EditingSession{}, fmt.Errorf("there is no document with such id")
+	return &EditingSession{}, fmt.Errorf("editing session not found")
 }
