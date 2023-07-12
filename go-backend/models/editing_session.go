@@ -13,9 +13,9 @@ type EditingSession struct {
 }
 
 var MockedEditingSessionsTable = []*EditingSession{
-	{UserId: 0, DocumentId: 1, CurrentPosition: 14, IsEditingActive: true},
-	{UserId: 2, DocumentId: 1, CurrentPosition: 3, IsEditingActive: false},
-	{UserId: 3, DocumentId: 1, CurrentPosition: 3, IsEditingActive: true},
+	{UserId: 0, DocumentId: 1, CurrentPosition: 0, IsEditingActive: true},
+	{UserId: 2, DocumentId: 1, CurrentPosition: 0, IsEditingActive: false},
+	{UserId: 3, DocumentId: 1, CurrentPosition: 0, IsEditingActive: true},
 }
 
 func (editingSession *EditingSession) SetCurrentPosition(newPosition int) {
@@ -35,11 +35,16 @@ func (editingSession *EditingSession) WriteToDocument(s string) error {
 	}
 	log.Printf("%+s\n", document.Content)
 	fmt.Printf("string to be inserted: %s\n", s)
+
 	if editingSession.CurrentPosition == len(document.Content) {
+		// If cursor is on the last position.
 		document.Content += s
+	} else {
+		// If cursor is not on the last position.
+		document.Content = document.Content[:editingSession.CurrentPosition] + s +
+			document.Content[editingSession.CurrentPosition:]
 	}
-	document.Content = document.Content[:editingSession.CurrentPosition] + s +
-		document.Content[editingSession.CurrentPosition:]
+	editingSession.CurrentPosition += len(s)
 
 	log.Printf("%+s\n", document.Content)
 	return nil
@@ -48,12 +53,12 @@ func (editingSession *EditingSession) WriteToDocument(s string) error {
 func GetEditingSessionByUserIdAndDocumentId(
 	userId,
 	documentId int,
-) (EditingSession, error) {
+) (*EditingSession, error) {
 
 	for _, editingSession := range MockedEditingSessionsTable {
 		if editingSession.UserId == userId && editingSession.DocumentId == documentId {
-			return *editingSession, nil
+			return editingSession, nil
 		}
 	}
-	return EditingSession{}, fmt.Errorf("there is no document with such id")
+	return &EditingSession{}, fmt.Errorf("editing session not found")
 }

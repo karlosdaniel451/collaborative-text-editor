@@ -155,10 +155,49 @@ paths:
         name: document_id
         required: true
         type: integer
+      produces:
+      - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.EditingSession'
         "400":
           description: Bad Request
       summary: Write in new EditingSession.
+      tags:
+      - EditingSessions
+    put:
+      consumes:
+      - application/json
+      description: Update the activity status or current position of an EditingSession.
+      parameters:
+      - description: User Id
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      - description: Document Id
+        in: path
+        name: document_id
+        required: true
+        type: integer
+      - description: EditingSession
+        in: body
+        name: editing_session
+        required: true
+        schema:
+          $ref: '#/definitions/models.EditingSession'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.EditingSession'
+        "400":
+          description: Bad Request
+      summary: Update an EditingSession.
       tags:
       - EditingSessions
   /users/{id}:

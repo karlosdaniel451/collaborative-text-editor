@@ -50,6 +50,7 @@ func main() {
 	app.Get("/editing-sessions", handlers.GetAllEditingSessions)
 	app.Post("/editing-sessions", handlers.CreateEditingSession)
 	app.Post("/editing-sessions/:user_id/:document_id", handlers.WriteInEditingSession)
+	app.Put("/editing-sessions/:user_id/:document_id", handlers.UpdateEditingSession)
 
 	log.Fatal(app.Listen(fmt.Sprintf("localhost:%d", port)))
 }
