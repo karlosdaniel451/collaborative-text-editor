@@ -3,6 +3,7 @@ import {DocumentService} from "../../service/document.service";
 import {Document} from "../../model/document.model";
 import {EditingSession} from "../../model/editing-session.model";
 import {EditingSessionService} from "../../service/editing-session.service";
+import {interval, take} from "rxjs";
 
 @Component({
   selector: 'app-write',
@@ -27,6 +28,7 @@ export class WriteComponent implements OnInit {
   constructor(private documentService: DocumentService, private editingSessionService: EditingSessionService) {}
 
   ngOnInit(): void {
+
     this.documentService.getDocuments().subscribe(
       (data: Document[]) => {
         this.document = data[0];
@@ -36,16 +38,18 @@ export class WriteComponent implements OnInit {
     this.editingSessionService.getEditingSessions().subscribe(
       (data: EditingSession[]) => {
         this.editingSession = data[0];
-        console.log(this.editingSession);
       }
     )
   }
 
   atualizaPosicaoCorrent(event: MouseEvent) {
     const textarea = event.target as HTMLTextAreaElement;
-    const posicao = textarea.selectionStart;
-
-    this.editingSession.current_position = posicao;
+    this.editingSession.current_position = textarea.selectionStart;
     this.editingSessionService.putEditingSession(this.editingSession).subscribe();
+  }
+
+  atualizaConteudo(event: KeyboardEvent) {
+    const letraDigitada = event.key;
+    this.editingSessionService.postEditingSession(this.editingSession, letraDigitada).subscribe();
   }
 }

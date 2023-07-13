@@ -19,4 +19,9 @@ export class EditingSessionService {
     const url = this.urlBase + '/' + editingSession.user_id + '/' + editingSession.document_id;
     return this.httpClient.put<EditingSession>(url, editingSession);
   }
+
+  postEditingSession(editingSession: EditingSession, novoTexto: string): Observable<EditingSession> {
+    const url = this.urlBase + '/' + editingSession.user_id + '/' + editingSession.document_id;
+    return this.httpClient.post<EditingSession>(url, novoTexto);
+  }
 }

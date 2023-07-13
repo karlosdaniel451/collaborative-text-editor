@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="text-center pt-5">
     <h1>Documento {{ document.name }}</h1>
-    <textarea (mousemove)="atualizaPosicaoCorrent($event)" class="bg-white w-75" rows="35" [(ngModel)]="document.content"></textarea>
+    <textarea (mousemove)="atualizaPosicaoCorrent($event)" (keyup)="atualizaConteudo($event)" class="bg-white w-75" rows="35" [ngModel]="document.content"></textarea>
   </div>
 
 </div>
