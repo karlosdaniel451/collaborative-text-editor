@@ -28,6 +28,10 @@ export class WriteComponent implements OnInit {
   constructor(private documentService: DocumentService, private editingSessionService: EditingSessionService) {}
 
   ngOnInit(): void {
+    const source = interval(1000)
+
+    source.pipe().subscribe(() => {
+    })
 
     this.documentService.getDocuments().subscribe(
       (data: Document[]) => {
@@ -42,14 +46,19 @@ export class WriteComponent implements OnInit {
     )
   }
 
-  atualizaPosicaoCorrent(event: MouseEvent) {
+  atualizaPosicaoCorrent(event: KeyboardEvent | MouseEvent) {
     const textarea = event.target as HTMLTextAreaElement;
     this.editingSession.current_position = textarea.selectionStart;
+
     this.editingSessionService.putEditingSession(this.editingSession).subscribe();
   }
 
   atualizaConteudo(event: KeyboardEvent) {
     const letraDigitada = event.key;
+
+    if (letraDigitada.length > 1) {
+      return;
+    }
     this.editingSessionService.postEditingSession(this.editingSession, letraDigitada).subscribe();
   }
 }
