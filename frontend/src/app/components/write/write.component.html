@@ -1,7 +1,12 @@
 <div class="container-fluid">
   <div class="text-center pt-5">
     <h1>Documento {{ document.name }}</h1>
-    <textarea (keyup)="atualizaConteudo($event)" (mouseup)="atualizaPosicaoCorrent($event)" class="bg-white w-75" rows="35" [ngModel]="document.content"></textarea>
+    <textarea (keyup)="atualizaConteudo($event)" (mouseup)="atualizaPosicaoCorrent($event)"
+              (keyup.arrowLeft)="atualizaPosicaoCorrent($event)"
+              (keyup.arrowRight)="atualizaPosicaoCorrent($event)"
+              (keyup.home)="atualizaPosicaoCorrent($event)"
+              (keyup.end)="atualizaPosicaoCorrent($event)"
+              class="bg-white w-75" rows="35" [ngModel]="document.content"></textarea>
   </div>
 
 </div>

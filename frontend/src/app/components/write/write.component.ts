@@ -46,11 +46,11 @@ export class WriteComponent implements OnInit {
     )
   }
 
-  atualizaPosicaoCorrent(event: KeyboardEvent | MouseEvent) {
+  atualizaPosicaoCorrent(event: MouseEvent | any) {
     const textarea = event.target as HTMLTextAreaElement;
     this.editingSession.current_position = textarea.selectionStart;
 
-    this.editingSessionService.putEditingSession(this.editingSession).subscribe();
+    this.editingSessionService.putEditingSession(this.editingSession).subscribe()
   }
 
   atualizaConteudo(event: KeyboardEvent) {
