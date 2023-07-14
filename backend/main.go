@@ -49,8 +49,11 @@ func main() {
 
 	app.Get("/editing-sessions", handlers.GetAllEditingSessions)
 	app.Post("/editing-sessions", handlers.CreateEditingSession)
-	app.Post("/editing-sessions/:user_id/:document_id", handlers.WriteInEditingSession)
+
 	app.Put("/editing-sessions/:user_id/:document_id", handlers.UpdateEditingSession)
+	app.Post("/editing-sessions/:user_id/:document_id", handlers.WriteInEditingSession)
+	app.Delete("/editing-sessions/:user_id/:document_id/:number_of_chars",
+		handlers.DeleteInEditingSession)
 
 	log.Fatal(app.Listen(fmt.Sprintf("localhost:%d", port)))
 }

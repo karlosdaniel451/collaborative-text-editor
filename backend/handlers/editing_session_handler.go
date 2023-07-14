@@ -71,7 +71,7 @@ func CreateEditingSession(c *fiber.Ctx) error {
 // @Produce json
 // @Param user_id path int true "User Id"
 // @Param document_id path int true "Document Id"
-// @Success 200 {object} models.EditingSession
+// @Success 204
 // @Failure 400
 // @Router /editing-sessions/{user_id}/{document_id} [post]
 func WriteInEditingSession(c *fiber.Ctx) error {
@@ -111,7 +111,63 @@ func WriteInEditingSession(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.SendStatus(fiber.StatusOK)
+	return c.SendStatus(fiber.StatusNoContent)
+}
+
+// Delete a given number characters in a EditingSession in its current position.
+// @Summary Delete chars in a EditingSession.
+// @Description Delete a given number of chars in a EditingSession in its current
+// @Description position.
+// @Tags EditingSessions
+// @Param user_id path int true "User Id"
+// @Param document_id path int true "Document Id"
+// @Success 204
+// @Failure 400
+// @Router /editing-sessions/{user_id}/{document_id}/{number_of_chars} [delete]
+func DeleteInEditingSession(c *fiber.Ctx) error {
+	errorDetails := []string{}
+
+	userId, err := c.ParamsInt("user_id")
+	if err != nil {
+		errorDetails = append(
+			errorDetails,
+			"invalid type: id of User should be an integer",
+		)
+	}
+	documentId, err := c.ParamsInt("document_id")
+	if err != nil {
+		errorDetails = append(
+			errorDetails,
+			"invalid type: id of Document should be an integer",
+		)
+	}
+
+	numberOfChars, err := c.ParamsInt("number_of_chars")
+	if err != nil {
+		errorDetails = append(
+			errorDetails,
+			"invalid type: number of chars to be deleted should be an integer",
+		)
+	}
+
+	if len(errorDetails) != 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"details": errorDetails,
+		})
+	}
+
+	editingSession, err := models.GetEditingSessionByUserIdAndDocumentId(userId,
+		documentId)
+
+	err = editingSession.DeleteFromDocument(numberOfChars)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"detail": err.Error(),
+		})
+	}
+
+	return c.SendStatus(fiber.StatusNoContent)
 }
 
 // Update the activity status or current position of an EditingSession.

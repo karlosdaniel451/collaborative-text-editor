@@ -44,9 +44,39 @@ func (editingSession *EditingSession) WriteToDocument(s string) error {
 		document.Content = document.Content[:editingSession.CurrentPosition] + s +
 			document.Content[editingSession.CurrentPosition:]
 	}
+
+	// Make cursor position follow the insertion of content.
 	editingSession.CurrentPosition += len(s)
 
-	log.Printf("%+s\n", document.Content)
+	return nil
+}
+
+func (editingSession *EditingSession) DeleteFromDocument(n int) error {
+	document, err := GetDocumentById(editingSession.DocumentId)
+	if err != nil {
+		return err
+	}
+	log.Printf("%s\n", document.Content)
+
+	if n > len(document.Content) || n > editingSession.CurrentPosition {
+		return fmt.Errorf("insufficient characters to be deleted")
+	}
+
+	if n == len(document.Content) {
+		document.Content = ""
+		// Make cursor position follow the insertion of content.
+		editingSession.CurrentPosition = 0
+		return nil
+	}
+
+	// document.Content = document.Content[:len(document.Content)-n]
+	// document.Content = document.Content[:editingSession.CurrentPosition-n]
+	document.Content = document.Content[:editingSession.CurrentPosition-n] +
+		document.Content[editingSession.CurrentPosition:]
+
+	// Make cursor position follow the insertion of content.
+	editingSession.CurrentPosition -= n
+
 	return nil
 }
 

@@ -158,10 +158,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.EditingSession'
+        "204":
+          description: No Content
         "400":
           description: Bad Request
       summary: Write in new EditingSession.
@@ -198,6 +196,30 @@ paths:
         "400":
           description: Bad Request
       summary: Update an EditingSession.
+      tags:
+      - EditingSessions
+  /editing-sessions/{user_id}/{document_id}/{number_of_chars}:
+    delete:
+      description: |-
+        Delete a given number of chars in a EditingSession in its current
+        position.
+      parameters:
+      - description: User Id
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      - description: Document Id
+        in: path
+        name: document_id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+      summary: Delete chars in a EditingSession.
       tags:
       - EditingSessions
   /users/{id}:
