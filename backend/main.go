@@ -43,6 +43,7 @@ func main() {
 	app.Get("/docs/*", swagger.HandlerDefault)
 
 	app.Get("/users/:id?", handlers.GetUserByIdHandler)
+	app.Post("/users/", handlers.CreateUser)
 
 	app.Get("/documents", handlers.GetAllDocuments)
 	app.Get("/documents/:id", handlers.GetDocumentByIdHandler)

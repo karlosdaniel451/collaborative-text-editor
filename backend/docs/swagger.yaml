@@ -222,6 +222,32 @@ paths:
       summary: Delete chars in a EditingSession.
       tags:
       - EditingSessions
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Create a new User discarting the value for "id".
+        such User encoded in JSON.
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+      summary: Create a new User.
+      tags:
+      - Users
   /users/{id}:
     get:
       description: |-
