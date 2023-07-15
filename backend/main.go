@@ -45,6 +45,7 @@ func main() {
 	app.Get("/users/:id?", handlers.GetUserByIdHandler)
 
 	app.Get("/documents", handlers.GetAllDocuments)
+	app.Get("/documents/:id", handlers.GetDocumentByIdHandler)
 	app.Post("/documents", handlers.CreateDocument)
 
 	app.Get("/editing-sessions", handlers.GetAllEditingSessions)

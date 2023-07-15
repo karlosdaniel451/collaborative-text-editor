@@ -43,13 +43,14 @@ func GetDocumentByIdHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	var foundDocument models.Document
-	for _, document := range models.MockedDocumentsTable {
-		if id == document.Id {
-			foundDocument = *document
-		}
+	document, err := models.GetDocumentById(id)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"detail": err.Error(),
+		})
 	}
-	return c.JSON(foundDocument)
+
+	return c.JSON(document)
 }
 
 // Create a new Document.
