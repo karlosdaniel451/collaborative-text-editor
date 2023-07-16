@@ -162,7 +162,7 @@ func DeleteInEditingSession(c *fiber.Ctx) error {
 	err = editingSession.DeleteFromDocument(numberOfChars)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"detail": err.Error(),
 		})
 	}

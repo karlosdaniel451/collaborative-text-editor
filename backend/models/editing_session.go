@@ -56,7 +56,7 @@ func (editingSession *EditingSession) WriteToDocument(s string) error {
 			editingSession.DocumentId == otherEditingSession.DocumentId &&
 			editingSession.CurrentPosition == otherEditingSession.CurrentPosition {
 
-			return fmt.Errorf("editing operation blocked: another user is on the same" +
+			return fmt.Errorf("editing operation blocked: another User is on the same" +
 				" position")
 		}
 	}
@@ -86,6 +86,24 @@ func (editingSession *EditingSession) DeleteFromDocument(n int) error {
 		// Make cursor position follow the insertion of content.
 		editingSession.CurrentPosition = 0
 		return nil
+	}
+
+	deletingRangeStart := editingSession.CurrentPosition - n
+	deletingRangeEnd := editingSession.CurrentPosition
+
+	// Check if editing operation will not affect other editing sessions.
+	for _, otherEditingSession := range MockedEditingSessionsTable {
+		if editingSession.UserId != otherEditingSession.UserId &&
+			editingSession.DocumentId == otherEditingSession.DocumentId {
+
+			if otherEditingSession.CurrentPosition >= deletingRangeStart &&
+				otherEditingSession.CurrentPosition <= deletingRangeEnd {
+
+				return fmt.Errorf("editing operation blocked: deleting range would" +
+					" affect another User")
+			}
+
+		}
 	}
 
 	// document.Content = document.Content[:len(document.Content)-n]
