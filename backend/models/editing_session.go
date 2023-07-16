@@ -67,6 +67,16 @@ func (editingSession *EditingSession) WriteToDocument(s string) error {
 	// Make cursor position follow the insertion of content.
 	editingSession.CurrentPosition += len(s)
 
+	// Make cursor position of other EditingSessions follow the insertion of content
+	for _, otherEditingSession := range MockedEditingSessionsTable {
+		if editingSession.UserId != otherEditingSession.UserId &&
+			editingSession.DocumentId == otherEditingSession.DocumentId &&
+			editingSession.CurrentPosition < otherEditingSession.CurrentPosition {
+
+			otherEditingSession.CurrentPosition += len(s)
+		}
+	}
+
 	return nil
 }
 
@@ -111,8 +121,18 @@ func (editingSession *EditingSession) DeleteFromDocument(n int) error {
 	document.Content = document.Content[:editingSession.CurrentPosition-n] +
 		document.Content[editingSession.CurrentPosition:]
 
-	// Make cursor position follow the insertion of content.
+	// Make cursor position follow the deleting of content.
 	editingSession.CurrentPosition -= n
+
+	// Make cursor position of other EditingSessions follow the deleting of content
+	for _, otherEditingSession := range MockedEditingSessionsTable {
+		if editingSession.UserId != otherEditingSession.UserId &&
+			editingSession.DocumentId == otherEditingSession.DocumentId &&
+			editingSession.CurrentPosition < otherEditingSession.CurrentPosition {
+
+			otherEditingSession.CurrentPosition -= n
+		}
+	}
 
 	return nil
 }
