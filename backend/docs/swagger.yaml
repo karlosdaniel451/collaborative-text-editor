@@ -227,7 +227,7 @@ paths:
       consumes:
       - application/json
       description: |-
-        Create a new User discarting the value for "id".
+        Create a new User discarting the value for "id" and return
         such User encoded in JSON.
       parameters:
       - description: User

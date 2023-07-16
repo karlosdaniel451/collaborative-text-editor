@@ -290,7 +290,7 @@ const docTemplate = `{
         },
         "/users": {
             "post": {
-                "description": "Create a new User discarting the value for \"id\".\nsuch User encoded in JSON.",
+                "description": "Create a new User discarting the value for \"id\" and return\nsuch User encoded in JSON.",
                 "consumes": [
                     "application/json"
                 ],

@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"log"
+	// "regexp"
 )
 
 type EditingSession struct {
@@ -18,14 +19,17 @@ var MockedEditingSessionsTable = []*EditingSession{
 	{UserId: 3, DocumentId: 1, CurrentPosition: 0, IsEditingActive: true},
 }
 
-func (editingSession *EditingSession) SetCurrentPosition(newPosition int) {
+func (editingSession *EditingSession) SetCurrentPosition(newPosition int) error {
 	document, err := GetDocumentById(editingSession.DocumentId)
 	if err != nil {
-		return
+		return err
 	}
 	if newPosition >= 0 && newPosition <= len(document.Content) {
 		editingSession.CurrentPosition = newPosition
+		return nil
 	}
+
+	return fmt.Errorf("invalid cursor position")
 }
 
 func (editingSession *EditingSession) WriteToDocument(s string) error {
@@ -39,11 +43,26 @@ func (editingSession *EditingSession) WriteToDocument(s string) error {
 	if editingSession.CurrentPosition == len(document.Content) {
 		// If cursor is on the last position.
 		document.Content += s
-	} else {
-		// If cursor is not on the last position.
-		document.Content = document.Content[:editingSession.CurrentPosition] + s +
-			document.Content[editingSession.CurrentPosition:]
+		// Make cursor position follow the insertion of content.
+		editingSession.CurrentPosition += len(s)
+		return nil
 	}
+
+	// If cursor is not on the last position.
+
+	// Check if editing operation will not affect other editing sessions.
+	for _, otherEditingSession := range MockedEditingSessionsTable {
+		if editingSession.UserId != otherEditingSession.UserId &&
+			editingSession.DocumentId == otherEditingSession.DocumentId &&
+			editingSession.CurrentPosition == otherEditingSession.CurrentPosition {
+
+			return fmt.Errorf("editing operation blocked: another user is on the same" +
+				" position")
+		}
+	}
+
+	document.Content = document.Content[:editingSession.CurrentPosition] + s +
+		document.Content[editingSession.CurrentPosition:]
 
 	// Make cursor position follow the insertion of content.
 	editingSession.CurrentPosition += len(s)
@@ -92,3 +111,24 @@ func GetEditingSessionByUserIdAndDocumentId(
 	}
 	return &EditingSession{}, fmt.Errorf("editing session not found")
 }
+
+// func GetIndicesOfEditingOpeartion(
+// 	userId int,
+// 	document *Document,
+// 	currentPosition int,
+// ) (leftIndex, rightIndex int) {
+// 	// Get the current word
+// 	re := regexp.MustCompile(`(\w+)`)
+// 	// currentWord := re.FindString(document.Content[currentPosition:])
+
+// 	indices := re.FindStringIndex(document.Content)
+// 	return indices[0], indices[1]
+// }
+
+// func IsEditingOperationBlocked(leftIndex, rightIndex, userId, documentId int) bool {
+// 	for _, editingSession := range MockedEditingSessionsTable {
+// 		if userId == editingSession.UserId && documentId == editingSession.DocumentId {
+// 			if leftIndex
+// 		}
+// 	}
+// }
