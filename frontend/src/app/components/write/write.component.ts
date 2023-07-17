@@ -28,16 +28,16 @@ export class WriteComponent implements OnInit {
   constructor(private documentService: DocumentService, private editingSessionService: EditingSessionService) {}
 
   ngOnInit(): void {
-    const source = interval(1000)
+    const source = interval(4000)
 
     source.pipe().subscribe(() => {
+      this.documentService.getDocuments().subscribe(
+        (data: Document[]) => {
+          this.document = data[0];
+        }
+      )
     })
 
-    this.documentService.getDocuments().subscribe(
-      (data: Document[]) => {
-        this.document = data[0];
-      }
-    )
 
     this.editingSessionService.getEditingSessions().subscribe(
       (data: EditingSession[]) => {
@@ -60,5 +60,9 @@ export class WriteComponent implements OnInit {
       return;
     }
     this.editingSessionService.postEditingSession(this.editingSession, letraDigitada).subscribe();
+  }
+
+  deletaConteudo(event: any) {
+    this.editingSessionService.deleteEditingSession(this.editingSession).subscribe();
   }
 }

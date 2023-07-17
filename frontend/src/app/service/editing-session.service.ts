@@ -24,4 +24,8 @@ export class EditingSessionService {
     const url = this.urlBase + '/' + editingSession.user_id + '/' + editingSession.document_id;
     return this.httpClient.post<EditingSession>(url, novoTexto);
   }
+  deleteEditingSession(editingSession: EditingSession): Observable<EditingSession> {
+    const url = this.urlBase + '/' + editingSession.user_id + '/' + editingSession.document_id + '/' + 1;
+    return this.httpClient.delete<EditingSession>(url);
+  }
 }

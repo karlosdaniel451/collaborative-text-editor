@@ -6,6 +6,7 @@
               (keyup.arrowRight)="atualizaPosicaoCorrent($event)"
               (keyup.home)="atualizaPosicaoCorrent($event)"
               (keyup.end)="atualizaPosicaoCorrent($event)"
+              (keyup.backspace)="deletaConteudo($event)"
               class="bg-white w-75" rows="35" [ngModel]="document.content"></textarea>
   </div>
 
