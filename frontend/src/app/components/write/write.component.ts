@@ -4,6 +4,7 @@ import {Document} from "../../model/document.model";
 import {EditingSession} from "../../model/editing-session.model";
 import {EditingSessionService} from "../../service/editing-session.service";
 import {interval, take} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-write',
@@ -25,23 +26,26 @@ export class WriteComponent implements OnInit {
     user_id: 0
   }
 
-  constructor(private documentService: DocumentService, private editingSessionService: EditingSessionService) {}
+  constructor(private documentService: DocumentService, private editingSessionService: EditingSessionService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    const id: string = this.route.snapshot.paramMap.get('id') as string;
     const source = interval(4000)
 
     source.pipe().subscribe(() => {
-      this.documentService.getDocuments().subscribe(
-        (data: Document[]) => {
-          this.document = data[0];
-        }
-      )
+      this.documentService.getById(1).subscribe(
+        (data: Document) => {
+          this.document = data;
+        })
     })
-
 
     this.editingSessionService.getEditingSessions().subscribe(
       (data: EditingSession[]) => {
-        this.editingSession = data[0];
+        data.forEach((editingSession: EditingSession) => {
+          if (editingSession.user_id == parseInt(id)) {
+            this.editingSession = editingSession;
+          }
+        })
       }
     )
   }
