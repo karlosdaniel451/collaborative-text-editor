@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -25,7 +27,18 @@ func main() {
 	})
 
 	// Setup middlewares
-	app.Use(logger.New())
+	loggerConfig := logger.Config{
+		Next: nil,
+		Done: nil,
+		Format: "[${time}] - ${ip}:${port} - ${ua} - \"${method} ${path}\" - ${status} " +
+			"- ${latency}\n",
+		TimeFormat:    time.RFC3339Nano,
+		TimeZone:      "UTC",
+		TimeInterval:  500 * time.Millisecond,
+		Output:        os.Stdout,
+		DisableColors: true,
+	}
+	app.Use(logger.New(loggerConfig))
 
 	// Root path operation
 	// @Summary Root path operation, serving as a hello world endpoint.
