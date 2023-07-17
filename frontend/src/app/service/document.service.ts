@@ -14,4 +14,9 @@ export class DocumentService {
   getDocuments(): Observable<Document[]> {
     return this.httpClient.get<Document[]>(this.urlBase);
   }
+
+  getById(id: number): Observable<Document> {
+    const url = this.urlBase + '/' + id;
+    return this.httpClient.get<Document>(url);
+  }
 }
