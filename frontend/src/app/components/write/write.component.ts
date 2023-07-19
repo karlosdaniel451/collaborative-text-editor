@@ -26,18 +26,19 @@ export class WriteComponent implements OnInit {
     user_id: 0
   }
 
-  constructor(private documentService: DocumentService, private editingSessionService: EditingSessionService, private route: ActivatedRoute) {}
-
-  ngOnInit(): void {
-    const id: string = this.route.snapshot.paramMap.get('id') as string;
+  constructor(private documentService: DocumentService, private editingSessionService: EditingSessionService,
+              private route: ActivatedRoute) {
     const source = interval(4000)
 
     source.pipe().subscribe(() => {
-      this.documentService.getById(1).subscribe(
-        (data: Document) => {
-          this.document = data;
-        })
+      this.verificaSeExisteNovoConteudo()
     })
+  }
+
+  ngOnInit(): void {
+    const id: string = this.route.snapshot.paramMap.get('id') as string;
+
+    this.verificaSeExisteNovoConteudo()
 
     this.editingSessionService.getEditingSessions().subscribe(
       (data: EditingSession[]) => {
@@ -48,6 +49,16 @@ export class WriteComponent implements OnInit {
         })
       }
     )
+  }
+
+  verificaSeExisteNovoConteudo(): void {
+    this.documentService.getById(1).subscribe(
+      (data: Document) => {
+        if (data.content == this.document.content) {
+          return;
+        }
+        this.document = data;
+      })
   }
 
   atualizaPosicaoCorrent(event: MouseEvent | any) {
