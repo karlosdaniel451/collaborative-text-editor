@@ -6,11 +6,11 @@ import {CadastraUserComponent} from "./components/cadastra-user/cadastra-user.co
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'user',
+    redirectTo: 'cadastro',
     pathMatch: 'full'
   },
   {
-    path: 'user',
+    path: 'cadastro',
     component: CadastraUserComponent
   },
   {
