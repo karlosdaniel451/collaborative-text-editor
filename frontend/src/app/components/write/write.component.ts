@@ -3,7 +3,7 @@ import {DocumentService} from "../../service/document.service";
 import {Document} from "../../model/document.model";
 import {EditingSession} from "../../model/editing-session.model";
 import {EditingSessionService} from "../../service/editing-session.service";
-import {interval, take} from "rxjs";
+import {catchError, EMPTY, empty, interval, take} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
@@ -40,7 +40,10 @@ export class WriteComponent implements OnInit {
 
     this.verificaSeExisteNovoConteudo()
 
-    this.editingSessionService.getEditingSessions().subscribe(
+    this.editingSessionService.getEditingSessions().pipe(
+      catchError(err => {
+        return EMPTY
+      })).subscribe(
       (data: EditingSession[]) => {
         data.forEach((editingSession: EditingSession) => {
           if (editingSession.user_id == parseInt(id)) {
@@ -52,20 +55,29 @@ export class WriteComponent implements OnInit {
   }
 
   verificaSeExisteNovoConteudo(): void {
-    this.documentService.getById(1).subscribe(
-      (data: Document) => {
-        if (data.content == this.document.content) {
-          return;
-        }
-        this.document = data;
+    this.documentService.getById(1).pipe(
+      catchError(err => {
+        window.alert('Erro ao buscar documento: ' + err.message)
+        return EMPTY
       })
+    ).subscribe(
+      (data: Document) => {
+        if (data.content != this.document.content) {
+          this.document = data;
+        }
+      }
+    )
   }
 
   atualizaPosicaoCorrent(event: MouseEvent | any) {
     const textarea = event.target as HTMLTextAreaElement;
     this.editingSession.current_position = textarea.selectionStart;
 
-    this.editingSessionService.putEditingSession(this.editingSession).subscribe()
+    this.editingSessionService.putEditingSession(this.editingSession).pipe(
+      catchError(err => {
+        return EMPTY
+      })
+    ).subscribe()
   }
 
   atualizaConteudo(event: KeyboardEvent) {
@@ -74,10 +86,20 @@ export class WriteComponent implements OnInit {
     if (letraDigitada.length > 1) {
       return;
     }
-    this.editingSessionService.postEditingSession(this.editingSession, letraDigitada).subscribe();
+    this.editingSessionService.postEditingSession(this.editingSession, letraDigitada).pipe(
+      catchError(err => {
+        window.alert('Erro ao atualizar conteúdo: ' + err.error.detail)
+        return EMPTY
+      })
+    ).subscribe();
   }
 
   deletaConteudo(event: any) {
-    this.editingSessionService.deleteEditingSession(this.editingSession).subscribe();
+    this.editingSessionService.deleteEditingSession(this.editingSession).pipe(
+      catchError(err => {
+        window.alert('Erro ao deletar conteúdo: ' + err.error.detail)
+        return EMPTY
+      })
+    ).subscribe();
   }
 }

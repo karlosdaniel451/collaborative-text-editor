@@ -4,6 +4,7 @@ import {UserService} from "../../service/user.service";
 import {Router} from "@angular/router";
 import {EditingSessionService} from "../../service/editing-session.service";
 import {EditingSession} from "../../model/editing-session.model";
+import {catchError, EMPTY} from "rxjs";
 
 @Component({
   selector: 'app-cadastra-user',
@@ -30,7 +31,12 @@ export class CadastraUserComponent {
       return
     }
 
-    this.UserService.postUser(this.cadastroForm.value).subscribe(
+    this.UserService.postUser(this.cadastroForm.value).pipe(
+      catchError(err => {
+        window.alert('Erro ao cadastrar usuário: ' + err.message)
+        return EMPTY
+      })
+    ).subscribe(
       data => {
         this.editingSession.user_id = data['id']
         this.editingSessionService.postEditingSession2(this.editingSession).subscribe()
