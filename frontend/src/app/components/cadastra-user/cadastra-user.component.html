@@ -1,7 +1,9 @@
-<div class="container-fluid text-center mt-5 rounded-lg pt-3 pb-3 pl-5 p-5">
-    <form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()" class="form-control">
+<div class="container-sm text-center mt-5 rounded-lg w-25 pt-5">
+    <form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()" class="form-control pt-4 pb-4">
       <h1 class="bg-transparent">Cadastro</h1>
-      <input formControlName="user_name" type="text" name="nome" id="nome" class="form-control" placeholder="Digite seu nome" required>
-      <button type="submit" [disabled]="cadastroForm.invalid" class="mt-2 btn btn-primary">Cadastrar</button>
+      <div class="bg-transparent mt-5 mb-4 mx-auto w-50">
+        <input formControlName="user_name" type="text" name="nome" id="nome" class="form-control text-center" placeholder="Digite seu nome" required>
+      </div>
+      <button type="submit" [disabled]="cadastroForm.invalid" class="mt-4 btn btn-primary">Cadastrar</button>
     </form>
 </div>
