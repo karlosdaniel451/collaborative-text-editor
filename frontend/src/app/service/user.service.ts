@@ -8,12 +8,17 @@ import {Observable} from "rxjs";
 })
 export class UserService {
 
-  urlBas = 'http://localhost:8080/users'
+  urlBas = '/users'
 
   constructor(private httpClient: HttpClient) { }
 
   postUser(user: User): Observable<User>  {
     return this.httpClient.post<User>(this.urlBas, user)
+  }
+
+  getById(id: number): Observable<User> {
+    const url = this.urlBas + '/' + id;
+    return this.httpClient.get<User>(url);
   }
 
 }
