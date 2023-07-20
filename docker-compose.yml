@@ -1,9 +1,22 @@
 version: '3'
 
 services:
+  server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    network_mode: host
   front:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - 4200:80
+      - 4200:4200
+    depends_on:
+      - server
+    network_mode: host
+
+networks:
+  system-network:

@@ -8,7 +8,7 @@ import {HttpClient} from "@angular/common/http";
 })
 export class DocumentService {
 
-  urlBase = '/documents';
+  urlBase = 'http://localhost:8080/documents';
   constructor(private httpClient: HttpClient) { }
 
   getDocuments(): Observable<Document[]> {

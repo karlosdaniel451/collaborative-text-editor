@@ -65,7 +65,6 @@
             },
             "development": {
               "browserTarget": "frontend:build:development",
-              "proxyConfig": "proxy.conf.js"
             }
           },
           "defaultConfiguration": "development"
