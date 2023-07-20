@@ -215,12 +215,25 @@ func UpdateEditingSession(c *fiber.Ctx) error {
 		})
 	}
 
+	document, err := models.GetDocumentById(editingSession.DocumentId)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"detail": "there is document with such id",
+		})
+	}
+
 	var newData models.EditingSession
 	err = c.BodyParser(&newData)
 	if err != nil {
 		log.Print(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"detail": "invalid body input data",
+		})
+	}
+
+	if newData.CurrentPosition < 0 || newData.CurrentPosition > len(document.Content) {
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
+			"detail": "invalid new current position",
 		})
 	}
 
