@@ -31,9 +31,9 @@ func GetAllEditingSessions(c *fiber.Ctx) error {
 // @Failure 400
 // @Router /editing-sessions [post]
 func CreateEditingSession(c *fiber.Ctx) error {
-	var editingSession models.EditingSession
+	var editingSession *models.EditingSession
 
-	err := c.BodyParser(&editingSession)
+	err := c.BodyParser(editingSession)
 	if err != nil {
 		log.Print(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -58,7 +58,7 @@ func CreateEditingSession(c *fiber.Ctx) error {
 	}
 
 	models.MockedEditingSessionsTable = append(models.MockedEditingSessionsTable,
-		&editingSession)
+		editingSession)
 
 	return c.JSON(editingSession)
 }
@@ -67,10 +67,11 @@ func CreateEditingSession(c *fiber.Ctx) error {
 // @Summary Write in new EditingSession.
 // @Description Write bytes in a EditingSession in its current position.
 // @Tags EditingSessions
-// @Accept plain
+// @Accept text/plain
 // @Produce json
 // @Param user_id path int true "User Id"
 // @Param document_id path int true "Document Id"
+// @Param new_content body string true "New content to be written"
 // @Success 204
 // @Failure 400
 // @Router /editing-sessions/{user_id}/{document_id} [post]

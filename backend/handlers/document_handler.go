@@ -65,9 +65,9 @@ func GetDocumentByIdHandler(c *fiber.Ctx) error {
 // @Failure 400
 // @Router /documents [post]
 func CreateDocument(c *fiber.Ctx) error {
-	var document models.Document
+	var document *models.Document
 
-	err := c.BodyParser(&document)
+	err := c.BodyParser(document)
 	if err != nil {
 		log.Print(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -75,7 +75,7 @@ func CreateDocument(c *fiber.Ctx) error {
 		})
 	}
 
-	models.MockedDocumentsTable = append(models.MockedDocumentsTable, &document)
+	models.MockedDocumentsTable = append(models.MockedDocumentsTable, document)
 
 	return c.JSON(document)
 }

@@ -243,6 +243,15 @@ const docTemplate = `{
                         "name": "document_id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "New content to be written",
+                        "name": "new_content",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {

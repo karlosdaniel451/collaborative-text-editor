@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"log"
+	"sync"
 	// "regexp"
 )
 
@@ -11,6 +12,7 @@ type EditingSession struct {
 	DocumentId      int  `json:"document_id"`
 	CurrentPosition int  `json:"current_position"`
 	IsEditingActive bool `json:"is_editing_active"`
+	mu              sync.Mutex
 }
 
 var MockedEditingSessionsTable = []*EditingSession{
@@ -20,6 +22,9 @@ var MockedEditingSessionsTable = []*EditingSession{
 }
 
 func (editingSession *EditingSession) SetCurrentPosition(newPosition int) error {
+	editingSession.mu.Lock()
+	defer editingSession.mu.Unlock()
+
 	document, err := GetDocumentById(editingSession.DocumentId)
 	if err != nil {
 		return err
@@ -33,16 +38,18 @@ func (editingSession *EditingSession) SetCurrentPosition(newPosition int) error 
 }
 
 func (editingSession *EditingSession) WriteToDocument(s string) error {
+	editingSession.mu.Lock()
+	defer editingSession.mu.Unlock()
+
 	document, err := GetDocumentById(editingSession.DocumentId)
 	if err != nil {
 		return err
 	}
-	log.Printf("%+s\n", document.Content)
-	fmt.Printf("string to be inserted: %s\n", s)
 
-	if editingSession.CurrentPosition == len(document.Content) {
+	if editingSession.CurrentPosition == len(document.GetContent()) {
 		// If cursor is on the last position.
-		document.Content += s
+		// document.Content += s
+		document.SetContent(document.GetContent() + s)
 		// Make cursor position follow the insertion of content.
 		editingSession.CurrentPosition += len(s)
 		return nil
@@ -61,8 +68,10 @@ func (editingSession *EditingSession) WriteToDocument(s string) error {
 		}
 	}
 
-	document.Content = document.Content[:editingSession.CurrentPosition] + s +
-		document.Content[editingSession.CurrentPosition:]
+	// document.Content = document.Content[:editingSession.CurrentPosition] + s +
+	// 	document.Content[editingSession.CurrentPosition:]
+	document.SetContent(document.GetContent()[:editingSession.CurrentPosition] + s +
+		document.GetContent()[editingSession.CurrentPosition:])
 
 	// Make cursor position follow the insertion of content.
 	editingSession.CurrentPosition += len(s)
@@ -81,6 +90,9 @@ func (editingSession *EditingSession) WriteToDocument(s string) error {
 }
 
 func (editingSession *EditingSession) DeleteFromDocument(n int) error {
+	editingSession.mu.Lock()
+	defer editingSession.mu.Unlock()
+
 	document, err := GetDocumentById(editingSession.DocumentId)
 	if err != nil {
 		return err
@@ -149,24 +161,3 @@ func GetEditingSessionByUserIdAndDocumentId(
 	}
 	return &EditingSession{}, fmt.Errorf("editing session not found")
 }
-
-// func GetIndicesOfEditingOpeartion(
-// 	userId int,
-// 	document *Document,
-// 	currentPosition int,
-// ) (leftIndex, rightIndex int) {
-// 	// Get the current word
-// 	re := regexp.MustCompile(`(\w+)`)
-// 	// currentWord := re.FindString(document.Content[currentPosition:])
-
-// 	indices := re.FindStringIndex(document.Content)
-// 	return indices[0], indices[1]
-// }
-
-// func IsEditingOperationBlocked(leftIndex, rightIndex, userId, documentId int) bool {
-// 	for _, editingSession := range MockedEditingSessionsTable {
-// 		if userId == editingSession.UserId && documentId == editingSession.DocumentId {
-// 			if leftIndex
-// 		}
-// 	}
-// }

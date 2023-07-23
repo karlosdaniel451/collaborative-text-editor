@@ -155,6 +155,12 @@ paths:
         name: document_id
         required: true
         type: integer
+      - description: New content to be written
+        in: body
+        name: new_content
+        required: true
+        schema:
+          type: string
       produces:
       - application/json
       responses:

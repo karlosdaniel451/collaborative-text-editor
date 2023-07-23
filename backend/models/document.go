@@ -2,12 +2,14 @@ package models
 
 import (
 	"fmt"
+	"sync"
 )
 
 type Document struct {
 	Id      int    `json:"id"`
 	Name    string `json:"name"`
 	Content string `json:"content"`
+	mu sync.Mutex
 }
 
 var MockedDocumentsTable = []*Document{}
@@ -30,4 +32,18 @@ func GetDocumentById(id int) (*Document, error) {
 		}
 	}
 	return &Document{}, fmt.Errorf("there is no document with such id")
+}
+
+func (document *Document) SetContent(newContent string) {
+	document.mu.Lock()
+	defer document.mu.Unlock()
+
+	document.Content = newContent
+}
+
+func (document *Document) GetContent() string {
+	document.mu.Lock()
+	defer document.mu.Unlock()
+
+	return document.Content
 }
