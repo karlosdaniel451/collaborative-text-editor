@@ -26,20 +26,26 @@ export class WriteComponent implements OnInit {
     user_id: 0
   }
 
+  editingSessions: EditingSession[] = []
+
   constructor(private documentService: DocumentService, private editingSessionService: EditingSessionService,
               private route: ActivatedRoute) {
     const source = interval(4000)
+    const id: string = this.route.snapshot.paramMap.get('id') as string;
 
     source.pipe().subscribe(() => {
       this.verificaSeExisteNovoConteudo()
+      this.atualizaEditingSession(id)
     })
   }
 
   ngOnInit(): void {
     const id: string = this.route.snapshot.paramMap.get('id') as string;
-
     this.verificaSeExisteNovoConteudo()
+    this.atualizaEditingSession(id)
+  }
 
+  atualizaEditingSession(id: string) {
     this.editingSessionService.getEditingSessions().pipe(
       catchError(err => {
         return EMPTY
@@ -48,10 +54,19 @@ export class WriteComponent implements OnInit {
         data.forEach((editingSession: EditingSession) => {
           if (editingSession.user_id == parseInt(id)) {
             this.editingSession = editingSession;
+          } else if (this.editingSessions.find((editingSession1: EditingSession) => editingSession1.user_id == editingSession.user_id) == undefined) {
+            this.editingSessions.push(editingSession)
+          } else if (this.editingSessions.find((editingSession1: EditingSession) => editingSession1.user_id == editingSession.user_id) != undefined) {
+            this.editingSessions.forEach((editingSession1: EditingSession) => {
+              if (editingSession1.user_id == editingSession.user_id) {
+                editingSession1.current_position = editingSession.current_position
+              }
+            })
           }
         })
       }
     )
+
   }
 
   verificaSeExisteNovoConteudo(): void {

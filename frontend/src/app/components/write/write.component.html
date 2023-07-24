@@ -1,6 +1,15 @@
 <div class="container-fluid">
   <div class="text-center pt-5">
     <h1>Documento {{ document.name }}</h1>
+
+    <div class="bg-white w-75 mx-auto m-3">
+      <div class="" *ngFor="let editing of editingSessions">
+        <p class="bg-white border border-dark m-0 p-0">
+          O usuário {{ editing.user_id }} está na posição {{ editing.current_position }}
+        </p>
+      </div>
+    </div>
+
     <textarea class="bg-white w-75 texto" rows="35" [ngModel]="document.content"
               maxlength="1000"
               (keyup)="atualizaConteudo($event)"

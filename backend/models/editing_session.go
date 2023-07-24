@@ -73,18 +73,19 @@ func (editingSession *EditingSession) WriteToDocument(s string) error {
 	document.SetContent(document.GetContent()[:editingSession.CurrentPosition] + s +
 		document.GetContent()[editingSession.CurrentPosition:])
 
-	// Make cursor position follow the insertion of content.
-	editingSession.CurrentPosition += len(s)
 
 	// Make cursor position of other EditingSessions follow the insertion of content
 	for _, otherEditingSession := range MockedEditingSessionsTable {
 		if editingSession.UserId != otherEditingSession.UserId &&
 			editingSession.DocumentId == otherEditingSession.DocumentId &&
-			editingSession.CurrentPosition < otherEditingSession.CurrentPosition {
+			editingSession.CurrentPosition <= otherEditingSession.CurrentPosition {
 
 			otherEditingSession.CurrentPosition += len(s)
 		}
 	}
+
+	// Make cursor position follow the insertion of content.
+	editingSession.CurrentPosition += len(s)
 
 	return nil
 }

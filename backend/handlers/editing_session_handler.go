@@ -33,7 +33,7 @@ func GetAllEditingSessions(c *fiber.Ctx) error {
 func CreateEditingSession(c *fiber.Ctx) error {
 	var editingSession *models.EditingSession
 
-	err := c.BodyParser(editingSession)
+	err := c.BodyParser(&editingSession)
 	if err != nil {
 		log.Print(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
