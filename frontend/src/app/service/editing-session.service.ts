@@ -8,7 +8,7 @@ import {EditingSession} from "../model/editing-session.model";
 })
 export class EditingSessionService {
 
-  urlBase = '/editing-sessions';
+  urlBase = '/api/editing-sessions';
   constructor(private httpClient: HttpClient) { }
 
   getEditingSessions(): Observable<EditingSession[]> {

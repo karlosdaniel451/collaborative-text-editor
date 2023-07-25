@@ -103,6 +103,7 @@ export class WriteComponent implements OnInit {
     }
     this.editingSessionService.postEditingSession(this.editingSession, letraDigitada).pipe(
       catchError(err => {
+        this.document.content = this.document.content.slice(0, this.document.content.length - 1)
         window.alert('Erro ao atualizar conteúdo: ' + err.error.detail)
         return EMPTY
       })
@@ -112,6 +113,7 @@ export class WriteComponent implements OnInit {
   deletaConteudo(event: any) {
     this.editingSessionService.deleteEditingSession(this.editingSession).pipe(
       catchError(err => {
+        this.document.content = this.document.content.slice(0, this.document.content.length - 1)
         window.alert('Erro ao deletar conteúdo: ' + err.error.detail)
         return EMPTY
       })
