@@ -1,6 +1,13 @@
 # collaborative-text-editor
 Simple collaborative text editor
 
+## Grupo
+
+* Adriel Lenner Vinhal Mori
+* Igor Moreira Pádua
+* Karlos Daniel Pires da Silva
+* Paulo Roberto Vieira
+
 ## Resumo
 
 Este é um editor de texto colaborativo projetado e implementado com o intuito de demonstrar problemas e nuances de programação concorrente, utilizando um servidor monolítico escrito em Go e um frontend Web Angular.
